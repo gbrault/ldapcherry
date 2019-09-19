@@ -5,7 +5,7 @@ ADD . /usr/src/app
 
 ENV DATAROOTDIR /usr/share
 ENV SYSCONFDIR /etc
-VOLUME ldapcherry
+VOLUME /ldapcherry
 
 RUN apk add --no-cache libldap && \
     apk add --no-cache --virtual build-dependencies build-base yaml-dev openldap-dev && \
