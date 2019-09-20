@@ -8,7 +8,7 @@ ENV SYSCONFDIR /etc
 VOLUME /ldapcherry
 
 RUN apk add --no-cache libldap && \
-    apk add --no-cache --virtual build-dependencies build-base yaml-dev openldap-dev && \
+    apk add --no-cache --virtual build-dependencies build-base yaml-dev openldap-dev procps nano net-tools&& \
     python setup.py install && \
     apk del build-dependencies && \
     cp -v conf/* /etc/ldapcherry && \
