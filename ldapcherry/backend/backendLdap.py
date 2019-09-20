@@ -477,7 +477,7 @@ class Backend(ldapcherry.backend.Backend):
         self._logger(
            severity=logging.DEBUG,
            msg="Try to Change,"
-           "'" + str(attrs) + "'",
+           "'" + str(attrs) + "'"
            "'" + str(old_attrs) + "'",
         )            
         for attr in attrs:
