@@ -476,9 +476,13 @@ class Backend(ldapcherry.backend.Backend):
         old_attrs = tmp[1]
         self._logger(
            severity=logging.DEBUG,
-           msg="Try to Change,"
-           "'" + str(attrs) + "'"
-           "'" + str(old_attrs) + "'",
+           msg="New attributes,"
+           "<====" + str(attrs) + "===>",
+        )            
+        self._logger(
+           severity=logging.DEBUG,
+           msg="Old Attributes,"
+           "<====" + str(old_attrs) + "====>",
         )            
         for attr in attrs:
             if attr == "userPassword":
