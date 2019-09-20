@@ -474,6 +474,11 @@ class Backend(ldapcherry.backend.Backend):
             raise UserDoesntExist(username, self.backend_name)
         dn = self._byte_p2(tmp[0])
         old_attrs = tmp[1]
+        self._logger(
+           severity=logging.DEBUG,
+           msg="Try to Change,"
+           "'" + str(attrs) + "'",
+        )            
         for attr in attrs:
             bcontent = self._byte_p2(attrs[attr])
             battr = self._byte_p2(attr)
