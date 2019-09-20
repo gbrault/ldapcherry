@@ -478,6 +478,7 @@ class Backend(ldapcherry.backend.Backend):
            severity=logging.DEBUG,
            msg="Try to Change,"
            "'" + str(attrs) + "'",
+           "'" + str(old_attrs) + "'",
         )            
         for attr in attrs:
             if attr == "userPassword":
