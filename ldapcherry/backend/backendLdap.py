@@ -490,49 +490,42 @@ class Backend(ldapcherry.backend.Backend):
            "<====" + str(old_attrs) + "====>",
         )            
         for attr in attrs:
-            if attr == "userPassword":
-                ldap_client.passwd_s(
-                           dn,
-                           attrs["currentUserPassword"],
-                           attrs[attr]
-                        )
+            bcontent = self._byte_p2(attrs[attr])
+            battr = self._byte_p2(attr)
+            new = {battr: self._modlist(self._byte_p3(bcontent))}
+            # if attr is dn entry, use rename
+            if attr.lower() == self.dn_user_attr.lower():
+                ldap_client.rename_s(
+                    dn,
+                    ldap.dn.dn2str([[(battr, bcontent, 1)]])
+                    )
+                dn = ldap.dn.dn2str(
+                    [[(battr, bcontent, 1)]] + ldap.dn.str2dn(dn)[1:]
+                    )
             else:
-                bcontent = self._byte_p2(attrs[attr])
-                battr = self._byte_p2(attr)
-                new = {battr: self._modlist(self._byte_p3(bcontent))}
-                # if attr is dn entry, use rename
-                if attr.lower() == self.dn_user_attr.lower():
-                    ldap_client.rename_s(
-                        dn,
-                        ldap.dn.dn2str([[(battr, bcontent, 1)]])
-                        )
-                    dn = ldap.dn.dn2str(
-                        [[(battr, bcontent, 1)]] + ldap.dn.str2dn(dn)[1:]
-                        )
-                else:
-                    # if attr is already set, replace the value
-                    # (see dict old passed to modifyModlist)
-                    if attr in old_attrs:
-                        if type(old_attrs[attr]) is list:
-                            tmp = []
-                            for value in old_attrs[attr]:
-                                tmp.append(self._byte_p2(value))
-                            bold_value = tmp
-                        else:
-                            bold_value = self._modlist(
-                                self._byte_p3(old_attrs[attr])
-                            )
-                        old = {battr: bold_value}
-                    # attribute is not set, just add it
+                # if attr is already set, replace the value
+                # (see dict old passed to modifyModlist)
+                if attr in old_attrs:
+                    if type(old_attrs[attr]) is list:
+                        tmp = []
+                        for value in old_attrs[attr]:
+                            tmp.append(self._byte_p2(value))
+                        bold_value = tmp
                     else:
-                        old = {}
-                    ldif = modlist.modifyModlist(old, new)
-                    if ldif:
-                        try:
-                            ldap_client.modify_s(dn, ldif)
-                        except Exception as e:
-                            ldap_client.unbind_s()
-                            self._exception_handler(e)
+                        bold_value = self._modlist(
+                            self._byte_p3(old_attrs[attr])
+                        )
+                    old = {battr: bold_value}
+                # attribute is not set, just add it
+                else:
+                    old = {}
+                ldif = modlist.modifyModlist(old, new)
+                if ldif:
+                    try:
+                        ldap_client.modify_s(dn, ldif)
+                    except Exception as e:
+                        ldap_client.unbind_s()
+                        self._exception_handler(e)
 
         ldap_client.unbind_s()
 
