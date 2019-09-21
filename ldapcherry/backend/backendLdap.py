@@ -476,6 +476,11 @@ class Backend(ldapcherry.backend.Backend):
         old_attrs = tmp[1]
         self._logger(
            severity=logging.DEBUG,
+           msg="DN,"
+           "<====" + str(dn) + "===>",
+        )            
+        self._logger(
+           severity=logging.DEBUG,
            msg="New attributes,"
            "<====" + str(attrs) + "===>",
         )            
@@ -488,7 +493,7 @@ class Backend(ldapcherry.backend.Backend):
             if attr == "userPassword":
                 ldap_client.passwd_s(
                            dn,
-                           old_attrs[attr],
+                           attrs["currentUserPassword"],
                            attrs[attr]
                         )
             else:
