@@ -120,6 +120,14 @@ password:
     type: password
     backends:
         ldap: userPassword
+oldpassword:
+    description: "Current Password of the user"
+    display_name: "Current Password"
+    weight: 31
+    self: True
+    type: password
+    backends:
+        ldap: userPasswordc
 #        ad: unicodePwd
 
 #logscript:
